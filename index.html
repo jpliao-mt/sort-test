@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>sortable demo</title>
+  <link rel="stylesheet" href="css/jquery-ui.css" />
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery-ui-1.9.2.js"></script>
+</head>
+<body>
+ 
+<ul id="sortable">
+	<li>Item 0</li>
+	<li>Item 1</li>
+	<li>Item 2</li>
+	<li>Item 3</li>
+	<li>Item 4</li>
+	<li>Item 5</li>
+	<li>Item 6</li>
+</ul>
+ 
+<script>
+$(function(){
+	var _crosspagenum;
+	$("#sortable").find('li:not(:first):even').css({ "background-color":"#f00"});
+	$("#sortable").find('li').mousedown(function(event) {
+		_crosspagenum = $(this).index();
+		$(this).addClass('onChange');
+		console.log("old: "+_crosspagenum);
+	});
+	$("#sortable").sortable({
+		start: function( event, ui ) {
+		},
+		disabled: false,
+		helper:"clone",
+		items:"li:not(:first):even",  //li:not(:first)
+		stop: function( event, ui ) {
+			_newPageNum = $('#sortable').find('li.onChange').index();
+			console.log("new: "+_newPageNum);
+			if(_newPageNum>_crosspagenum){
+				console.log(">");
+				$('.onChange').before($("#sortable").find('li').eq(_newPageNum+1));
+				$('.onChange').after($("#sortable").find('li').eq(_crosspagenum));
+			}else{
+				console.log("<");
+				// $('.onChange').before($("#sortable").find('li').eq(_newPageNum+1));
+				$('.onChange').after($("#sortable").find('li').eq(_crosspagenum+1));
+			}
+			_newPageNum = $('#sortable').find('li.onChange').index();
+			console.log("new: "+_newPageNum);
+			$('.onChange').removeClass('onChange');
+		},
+		scroll: false
+	});
+});
+</script>
+ 
+</body>
+</html>
